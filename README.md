@@ -1,7 +1,7 @@
 # Rabbot
 Rabbot is a Discord Bot written in Python. The bot is currently early in development.
 
-#Commands
+# Commands
 ```
 !help - Get current list of commands
 !hello - Make the bot say Hi
