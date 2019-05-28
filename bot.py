@@ -3,12 +3,12 @@ import os
 from random import randint
 from bs4 import BeautifulSoup as bs4
 from markdown import markdown
+from imgurpython import ImgurClient
 
 token = os.environ.get('TOKEN')
 servID = int(os.environ.get('SERVERID'))
 
 client = discord.Client()
-
 
 @client.event
 async def on_message(message):
@@ -19,7 +19,7 @@ async def on_message(message):
     elif message.content == '!help':
         await message.channel.send(getCommands())
     elif message.content == '!users':
-        await message.channel.send(f"""# of Members: {id.member_count}""")
+        await message.channel.send(f"""Number of Members: {id.member_count}""")
     elif message.content[:2] == '!d' and message.content[2:].isdigit():
         diceSide = int(message.content[2:])
         await message.channel.send(randint(1, diceSide))
@@ -30,13 +30,11 @@ async def on_message(message):
         else:
             await message.channel.send('Tails')
 
-
 @client.event
 async def on_member_join(member):
     for channel in member.server.channels:
         if str(channel) == 'general':
             await message.channel.send(f'''Welcome to the server {member.mention}''')
-
 
 def getCommands():
     file = open('README.md', 'r')
@@ -54,7 +52,7 @@ def getCommands():
             if line == '```' and len(commands) > 2:
                 break
     commands.append('**Author:**')
-    commands.append('https://github.com/kylejbrk/Rabbot/')
+    commands.append('https://github.com/kylejbrk/Rabbot')
     return('\n'.join(commands))
 
 client.run(token)
