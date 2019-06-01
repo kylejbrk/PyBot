@@ -1,0 +1,5 @@
+!help:Get current list of commands
+!hello:Make the bot say Hi
+!users:Get a count of current users in the discord
+!d[number]:Roll a die of any side
+!coinflip:Flip a coin

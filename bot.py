@@ -37,22 +37,13 @@ async def on_member_join(member):
             await message.channel.send(f'''Welcome to the server {member.mention}''')
 
 def getCommands():
-    file = open('README.md', 'r')
-    data = file.read().splitlines()
-    file.close()
-
-    bCmd = False
-    commands = ['**Commands**']
-    for line in data:
-        if line == '# Commands':
-            bCmd = True
-            continue
-        elif bCmd:
-            commands.append(line)
-            if line == '```' and len(commands) > 2:
-                break
-    commands.append('**Author:**')
-    commands.append('https://github.com/kylejbrk/Rabbot')
-    return('\n'.join(commands))
+    file = open('commands.txt', 'r')
+    cmds = ['```']
+    for line in file:
+        text = line.split(':')
+        cmdString = '{:<20} {:<20}'.format(text[0], text[1].replace('\n', ''))
+        cmds.append(cmdString)
+    cmds.append('```')
+    return('\n'.join(cmds))
 
 client.run(token)
