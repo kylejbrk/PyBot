@@ -18,6 +18,8 @@ async def on_message(message):
         await message.channel.send("Hi")
     elif message.content == '!help':
         await message.channel.send(getCommands())
+    elif message.content == '!author':
+        await message.channel.send('https://github.com/kylejbrk/Rabbot')
     elif message.content == '!users':
         await message.channel.send(f"""Number of Members: {id.member_count}""")
     elif message.content[:2] == '!d' and message.content[2:].isdigit():
