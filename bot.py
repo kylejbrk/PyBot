@@ -46,6 +46,7 @@ def getCommands():
         cmdString = '{:<20} {:<20}'.format(text[0], text[1].replace('\n', ''))
         cmds.append(cmdString)
     cmds.append('```')
+    file.close()
     return('\n'.join(cmds))
 
 client.run(token)
