@@ -1,9 +1,11 @@
 import discord
 import os
 from random import randint
-from bs4 import BeautifulSoup as bs4
+from bs4 import BeautifulSoup
 from markdown import markdown
 from imgurpython import ImgurClient
+import requests
+import re
 
 token = os.environ.get('TOKEN')
 servID = int(os.environ.get('SERVERID'))
@@ -31,6 +33,15 @@ async def on_message(message):
             await message.channel.send('Heads')
         else:
             await message.channel.send('Tails')
+    elif message.content == '!petittube':
+        petittube = requests.get('http://www.petittube.com/')
+        soup = BeautifulSoup(petittube.content, 'html.parser')
+        link = soup.find('iframe')['src']
+        prefix = 'https://www.youtube.com/embed/'
+        suffix = '?version=3&f=videos&app=youtube_gdata&autoplay=1'
+        link = link[len(prefix)-1:-len(suffix)]
+
+        await message.channel.send('https://www.youtube.com/watch?v=' + link)
 
 @client.event
 async def on_member_join(member):

@@ -4,3 +4,4 @@
 !users:Get a count of current users in the discord
 !d[number]:Roll a die of any side
 !coinflip:Flip a coin
+!petittube:Gets random youtube video with 0 views
