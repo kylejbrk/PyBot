@@ -1,63 +1,80 @@
-import discord
-import os
+import discord, os, requests, re
+from discord.ext import commands
 from random import randint
 from bs4 import BeautifulSoup
-from markdown import markdown
-from imgurpython import ImgurClient
-import requests
-import re
+from imgurpython import ImgurClient 
 
 token = os.environ.get('TOKEN')
 servID = int(os.environ.get('SERVERID'))
 
-client = discord.Client()
+description = '''Bot description here'''
+bot = commands.Bot(command_prefix='!')
 
-@client.event
+@bot.event
+async def on_ready():
+    print("Bot is live")
+
+@bot.event
 async def on_message(message):
-    id = client.get_guild(servID)
+    print("The message's content was", message.content)
+    await bot.process_commands(message)
 
-    if message.content == '!hello':
-        await message.channel.send("Hi")
-    elif message.content == '!help':
-        await message.channel.send(getCommands())
-    elif message.content == '!author':
-        await message.channel.send('https://github.com/kylejbrk/Rabbot')
-    elif message.content == '!users':
-        await message.channel.send(f"""Number of Members: {id.member_count}""")
-    elif message.content[:2] == '!d' and message.content[2:].isdigit():
-        diceSide = int(message.content[2:])
-        await message.channel.send(randint(1, diceSide))
-    elif message.content == '!coinflip':
-        coin = randint(0, 1)
-        if coin == 0:
-            await message.channel.send('Heads')
-        else:
-            await message.channel.send('Tails')
-    elif message.content == '!petittube':
-        petittube = requests.get('http://www.petittube.com/')
-        soup = BeautifulSoup(petittube.content, 'html.parser')
-        link = soup.find('iframe')['src']
-        prefix = 'https://www.youtube.com/embed/'
-        suffix = '?version=3&f=videos&app=youtube_gdata&autoplay=1'
-        link = link[len(prefix)-1:-len(suffix)]
+@bot.command()
+async def ping(ctx):
+    '''
+    Ping the bot 
+    '''
+    latency = bot.latency
+    await ctx.send(latency)
 
-        await message.channel.send('https://www.youtube.com/watch?v=' + link)
+@bot.command()
+async def echo(ctx, *, content:str):
+    '''
+    Make the bot say something
+    '''
+    await ctx.send(content)
 
-@client.event
-async def on_member_join(member):
-    for channel in member.server.channels:
-        if str(channel) == 'general':
-            await message.channel.send(f'''Welcome to the server {member.mention}''')
+@bot.command()
+async def coinflip(ctx):
+    '''
+    Flip a coin
+    '''
+    coin = randint(0, 1)
+    if coin == 0:
+        await ctx.send('Heads')
+    else:
+        await ctx.send('Tails')
 
-def getCommands():
-    file = open('commands.txt', 'r')
-    cmds = ['```']
-    for line in file:
-        text = line.split(':')
-        cmdString = '{:<20} {:<20}'.format(text[0], text[1].replace('\n', ''))
-        cmds.append(cmdString)
-    cmds.append('```')
-    file.close()
-    return('\n'.join(cmds))
+@bot.command()
+async def petittube(ctx):
+    '''
+    Get random Youtube video with 0 views
+    '''
+    petittube = requests.get('http://www.petittube.com/')
+    soup = BeautifulSoup(petittube.content, 'html.parser')
+    link = soup.find('iframe')['src']
+    prefix = 'https://www.youtube.com/embed/'
+    suffix = '?version=3&f=videos&app=youtube_gdata&autoplay=1'
+    link = link[len(prefix)-1:-len(suffix)]
 
-client.run(token)
+    await ctx.send('https://www.youtube.com/watch?v=' + link)
+
+@bot.command()
+async def roll(ctx, first:int):
+    '''
+    Roll a die of any side (i.e. !roll 6)
+    '''
+    await ctx.send(randint(1, first))
+
+@bot.command()
+async def xkcd(ctx):
+    '''
+    Get a random xkcd comic
+    '''
+    xkcd = requests.get('https://c.xkcd.com/random/comic/')
+    soup = BeautifulSoup(xkcd.content, 'html.parser')
+    link = soup.select('#comic img')
+    await ctx.send('https:' + link[0].get('src'))
+
+if __name__ == '__main__':
+    bot.run(token)
