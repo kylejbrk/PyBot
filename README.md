@@ -1,19 +1,6 @@
 # Rabbot
 Rabbot is a Discord Bot written in Python. The bot is currently early in development.
 
-# Features
-## Utility
-* Flip a coin
-* Roll a die of any side
-* Repeat Messages
-* Ping
-
-## Entertainment
-* Get a random Youtube Video
-* Get a random xkcd comic
-
-More features to come.
-
 # Requirements
 * Python
 * discord.py
